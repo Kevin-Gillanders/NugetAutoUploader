@@ -30,16 +30,21 @@ namespace AssemblyInfoUtil
             var buildCommand = "/C msbuild";
             string packCommand = "/C nuget pack";
 
+            Console.WriteLine("========Update Assembly========");
             var assemblyID = AssemblyUtil.UpdateAssembly();
+            Console.WriteLine("========Build project========");
 
             var output = CommandLine.RunCommand(projectPath, buildCommand);
 
             Console.WriteLine(output);
+            
+            Console.WriteLine("========Package project========");
 
             output = CommandLine.RunCommand(projectPath, packCommand);
 
             Console.WriteLine(output);
-
+            
+            Console.WriteLine("========Push project to NuGet server========");
             string nuspecFile = GetNuspecFileName(projectName, projectPath, assemblyID); 
             var pushCommand = $"/C nuget push {nuspecFile} -ApiKey {NugetConf.ApiKey} -Source {NugetConf.Server}";
 
